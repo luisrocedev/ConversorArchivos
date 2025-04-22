@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Conversor de Archivos</title>
+  <link rel="stylesheet" href="Style.css" />
+  <link rel="manifest" href="Manifest.json" />
+  <link rel="icon" href="Icono.png" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('ServiceWorker.js')
+        .then(() => console.log("Service Worker registrado."));
+    }
+  </script>
+</head>
+<body>
+  <h2>Conversor de Archivos (SPA Mejorada)</h2>
+
+  <label for="contenido">Texto o CSV:</label>
+  <textarea id="contenido" rows="6">nombre,edad\nLuis,22\nAna,25</textarea>
+
+  <label for="tipo">Tipo de entrada:</label>
+  <select id="tipo">
+    <option value="txt">TXT</option>
+    <option value="csv">CSV</option>
+  </select>
+
+  <label for="formato">Formato de salida:</label>
+  <select id="formato">
+    <option value="json">JSON</option>
+    <option value="xml">XML</option>
+    <option value="md">Markdown</option>
+    <option value="txt">Texto</option>
+    <option value="pdf">PDF</option>
+  </select>
+
+  <button onclick="convertir()">Convertir</button>
+
+  <div id="resultado">
+    <h3>Resultado:</h3>
+    <pre id="salida">Esperando conversión...</pre>
+    <button onclick="copiarResultado()">Copiar al portapapeles</button>
+  </div>
+
+  <div id="historial">
+    <h3>Historial de conversiones</h3>
+    <button onclick="borrarHistorialLocal()">🧹 Borrar historial local</button>
+    <button onclick="borrarHistorialServidor()">🧨 Borrar historial del servidor</button>
+    <ul id="listaHistorial"></ul>
+  </div>
+
+  <script>
+    async function convertir() {
+      const contenido = document.getElementById("contenido").value;
+      const tipo = document.getElementById("tipo").value;
+      const formato = document.getElementById("formato").value;
+      const salida = document.getElementById("salida");
+
+      salida.textContent = "Convirtiendo...";
+
+      const res = await fetch("Api.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contenido, tipo, formato })
+      });
+
+      const data = await res.json();
+      const timestamp = new Date().toLocaleString();
+
+      if (data.archivo && formato === "pdf") {
+        salida.innerHTML = `PDF generado: <a href="${data.archivo}" download>${data.archivo}</a>`;
+        guardarHistorial(`${timestamp} - ${tipo.toUpperCase()} → PDF`);
+      } else if (data.contenido) {
+        salida.textContent = data.contenido;
+        guardarHistorial(`${timestamp} - ${tipo.toUpperCase()} → ${formato.toUpperCase()}`);
+        localStorage.setItem("ultimoResultado", data.contenido);
+      } else {
+        salida.textContent = JSON.stringify(data, null, 2);
+      }
+    }
+
+    function copiarResultado() {
+      const texto = document.getElementById("salida").innerText;
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("Copiado al portapapeles");
+      });
+    }
+
+    function guardarHistorial(item) {
+      let historial = JSON.parse(localStorage.getItem("historial")) || [];
+      historial.unshift(item);
+      historial = historial.slice(0, 5);
+      localStorage.setItem("historial", JSON.stringify(historial));
+      mostrarHistorial();
+    }
+
+    async function mostrarHistorial() {
+      const lista = document.getElementById("listaHistorial");
+      lista.innerHTML = "";
+
+      // Historial local
+      const historialLocal = JSON.parse(localStorage.getItem("historial")) || [];
+      if (historialLocal.length > 0) {
+        const liLocal = document.createElement("li");
+        liLocal.textContent = "— Historial local —";
+        lista.appendChild(liLocal);
+        historialLocal.forEach(entry => {
+          const li = document.createElement("li");
+          li.textContent = entry;
+          lista.appendChild(li);
+        });
+      }
+
+      // Historial del servidor
+      try {
+        const res = await fetch("Historial.php");
+        const historialServidor = await res.json();
+
+        if (historialServidor.length > 0) {
+          const liSrv = document.createElement("li");
+          liSrv.textContent = "— Historial del servidor —";
+          lista.appendChild(liSrv);
+          historialServidor.forEach(entry => {
+            const li = document.createElement("li");
+            li.textContent = entry;
+            lista.appendChild(li);
+          });
+        }
+      } catch (e) {
+        const li = document.createElement("li");
+        li.textContent = "Error al cargar historial del servidor.";
+        lista.appendChild(li);
+      }
+    }
+
+    function borrarHistorialLocal() {
+      localStorage.removeItem("historial");
+      mostrarHistorial();
+    }
+
+    async function borrarHistorialServidor() {
+      const confirmacion = confirm("¿Seguro que quieres borrar el historial del servidor?");
+      if (!confirmacion) return;
+
+      const res = await fetch("BorrarHistorial.php", {
+        method: "POST"
+      });
+      const data = await res.json();
+      alert(data.mensaje || "Historial del servidor eliminado.");
+      mostrarHistorial();
+    }
+
+    window.onload = () => {
+      const ultimo = localStorage.getItem("ultimoResultado");
+      if (ultimo) {
+        document.getElementById("salida").textContent = ultimo;
+      }
+      mostrarHistorial();
+    }
+  </script>
+</body>
+</html>
