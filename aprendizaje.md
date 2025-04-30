@@ -2,264 +2,212 @@
 
 ## Programación
 
-### 1. Elementos fundamentales del código
-- **Variables**: Ejemplo en PHP:
-  ```php
-  $contenido = $input['contenido'];
-  $tipo = strtolower($input['tipo']);
-  $formato = strtolower($input['formato']);
-  $fecha = date("Y-m-d_H-i-s");
-  $archivoFinal = "convertido_$fecha.$formato";
-  ```
-- **Constantes**: No se usan constantes explícitas, pero sí valores fijos como nombres de archivos.
-- **Operadores**: Asignación (`=`), comparación (`===`, `==`, `!=`), concatenación (`.`), aritméticos (`+`, `-`), lógicos (`&&`, `||`).
-- **Tipos de datos**: Strings, arrays, booleanos, enteros, objetos (JSON).
+### 1. ¿Qué elementos fundamentales incluye vuestro código?
 
----
+En nuestro código usamos variables (para guardar datos que cambian), operadores (para hacer operaciones como sumar o comparar), y tipos de datos como textos (strings), números y listas (arrays). Por ejemplo:
 
-### 2. Estructuras de control
-- **Selección**: Uso de `if`, `else`, ejemplo:
-  ```php
-  if ($formato === "json") {
-      if ($tipo === "csv") {
-          // Conversión CSV a JSON
-      } else {
-          // Otro tipo
-      }
-  }
-  ```
-- **Repetición**: Uso de `foreach`, ejemplo:
-  ```php
-  foreach ($filas as $fila) {
-      // Procesar cada fila
-  }
-  ```
-- **Saltos**: Uso de `return`, `exit` para finalizar ejecución en caso de error.
+```php
+$nombre = "Juan"; // variable tipo texto
+$edad = 20; // variable tipo número
+$lista = [1,2,3]; // variable tipo lista
+if ($edad > 18) { ... } // operador de comparación
+```
 
----
+### 2. ¿Qué estructuras de control habéis usado y por qué?
 
-### 3. Control de excepciones y errores
-- No se usa `try-catch`, pero sí validaciones y respuestas de error:
-  ```php
-  if (!isset($input['contenido'], $input['tipo'], $input['formato'])) {
-      echo json_encode(["error" => "Faltan datos"]);
-      exit;
-  }
-  ```
+Utilizamos estructuras como `if` (para tomar decisiones), `foreach` (para repetir acciones con listas) y `exit` (para salir del programa si hay un error). Ejemplo:
 
----
+```php
+if ($formato === "json") {
+    // Si el formato es JSON, hacemos algo
+}
+foreach ($filas as $fila) {
+    // Repetimos para cada fila
+}
+```
 
-### 4. Documentación en el código
-- Se usan comentarios explicativos:
-  ```php
-  // Carga mpdf si está instalado
-  require __DIR__ . '/vendor/autoload.php';
-  ```
+### 3. ¿Habéis implementado control de excepciones? ¿Cómo gestionáis errores?
 
----
+No usamos try-catch, pero sí comprobamos si los datos están bien antes de seguir. Si falta algo, mostramos un mensaje de error y paramos el programa:
 
-### 5. Paradigma aplicado
-- Predomina la **programación estructurada** (funciones y procedimientos).
-- Se usa OOP solo para la librería externa `mpdf`.
+```php
+if (!isset($input['contenido'])) {
+    echo json_encode(["error" => "Faltan datos"]);
+    exit;
+}
+```
 
----
+### 4. ¿Habéis documentado el código mediante comentarios?
 
-### 6. Clases y objetos principales
-- Solo se instancia la clase externa para PDF:
-  ```php
-  $mpdf = new \Mpdf\Mpdf();
-  $mpdf->WriteHTML($html);
-  $mpdf->Output($archivoFinal, \Mpdf\Output\Destination::FILE);
-  ```
+Sí, ponemos comentarios para explicar partes importantes del código. Ejemplo:
 
----
+```php
+// Carga la librería para crear PDF
+require __DIR__ . '/vendor/autoload.php';
+```
 
-### 7. Herencia, polimorfismo, interfaces
-- No se usan conceptos avanzados de OOP en el código propio.
+### 5. ¿Qué paradigma habéis aplicado? ¿Por qué?
 
----
+Usamos programación estructurada (funciones y procedimientos) porque es más fácil para proyectos pequeños. Solo usamos programación orientada a objetos para la librería de PDF.
 
-### 8. Gestión de información mediante archivos
-- Se usan archivos para guardar resultados e historial:
-  ```php
-  file_put_contents($archivoFinal, $resultado);
-  file_put_contents("historial.txt", "[$fecha] $tipo → $formato ($archivoFinal)\n", FILE_APPEND);
-  ```
-- Interfaz gráfica: HTML + JS para interacción con el usuario.
+### 6. ¿Qué clases y objetos principales forman vuestro proyecto?
 
----
+No creamos nuestras propias clases, pero usamos la clase `Mpdf` de una librería externa para crear archivos PDF:
 
-### 9. Estructuras de datos utilizadas
-- Uso de arrays para manipular datos:
-  ```php
-  $filas = array_map("str_getcsv", explode("\n", trim($contenido)));
-  $cabeceras = array_shift($filas);
-  $data = [];
-  foreach ($filas as $fila) {
-      if (count($fila) > 1) {
-          $data[] = array_combine($cabeceras, $fila);
-      }
-  }
-  ```
+```php
+$mpdf = new \Mpdf\Mpdf();
+$mpdf->WriteHTML($html);
+$mpdf->Output($archivoFinal, \Mpdf\Output\Destination::FILE);
+```
 
----
+### 7. ¿Habéis usado herencia, polimorfismo o interfaces?
 
-### 10. Técnicas avanzadas
-- Flujos de entrada/salida: lectura y escritura de archivos.
-- No se usan expresiones regulares.
+No, porque nuestro proyecto es sencillo y no lo necesita.
+
+### 8. ¿Habéis gestionado la información mediante archivos? ¿Usáis ficheros o interfaces gráficas?
+
+Sí, guardamos datos en archivos de texto y PDF. Además, la web tiene una interfaz gráfica hecha con HTML y JavaScript para que el usuario interactúe fácilmente.
+
+### 9. ¿Qué estructuras de datos estáis utilizando?
+
+Usamos listas (arrays) para guardar y procesar datos, por ejemplo, al convertir CSV a JSON:
+
+```php
+$filas = array_map("str_getcsv", explode("\n", trim($contenido)));
+```
+
+### 10. ¿Habéis aplicado técnicas avanzadas como expresiones regulares o flujos de entrada/salida?
+
+No usamos expresiones regulares, pero sí leemos y escribimos archivos (entrada/salida).
 
 ---
 
 ## Sistemas Informáticos
 
-### 1. Características del hardware
-- **Desarrollo**: Mac (MAMP), entorno local.
-- **Producción**: Servidor web básico, requisitos mínimos para PHP y Composer.
+### 1. ¿Qué características tiene el hardware donde se ejecuta vuestro desarrollo?
 
----
+Trabajamos en ordenadores normales (como un Mac) para programar y probamos en un servidor web sencillo para producción.
 
-### 2. Sistema operativo
-- **Desarrollo**: macOS.
-- **Producción**: Linux.
+### 2. ¿Qué sistema operativo habéis seleccionado y por qué?
 
----
+Usamos macOS para programar porque es el que tenemos, y Linux en el servidor porque es muy común y estable para webs.
 
-### 3. Configuración de redes
-- HTTP/HTTPS, red local en desarrollo.
-- Sin medidas avanzadas de seguridad en el código base.
+### 3. ¿Cómo habéis configurado las redes para vuestro proyecto?
 
----
+Usamos HTTP/HTTPS para que la web funcione en local y en internet. No hemos puesto seguridad avanzada porque es un proyecto sencillo.
 
-### 4. Copias de seguridad
-- No hay sistema automático, pero los archivos generados pueden respaldarse manualmente.
+### 4. ¿Habéis implementado sistemas de copias de seguridad?
 
----
+No hay copias automáticas, pero los archivos se pueden guardar manualmente si hace falta.
 
-### 5. Integridad y seguridad de datos
-- Validación de entrada.
-- No se almacenan datos sensibles.
+### 5. ¿Qué medidas habéis tomado para asegurar la integridad y seguridad de vuestros datos?
 
----
+Comprobamos que los datos que llegan sean correctos antes de usarlos. No guardamos datos sensibles.
 
-### 6. Usuarios, permisos y accesos
-- No hay gestión de usuarios en la app. Los permisos de archivos deben configurarse en el sistema operativo.
+### 6. ¿Cómo habéis configurado usuarios, permisos y accesos?
 
----
+No hay usuarios en la app. Los permisos de los archivos se ponen en el sistema operativo.
 
-### 7. Documentación técnica
-- `README.md` con instrucciones.
-- Comentarios en el código.
+### 7. ¿Habéis documentado la configuración técnica?
+
+Sí, hay un README.md con instrucciones y comentarios en el código.
 
 ---
 
 ## Entornos de Desarrollo
 
-### 1. Entorno de desarrollo (IDE)
-- **Visual Studio Code**.
-- Extensiones para PHP, HTML, CSS.
+### 1. ¿Qué entorno de desarrollo (IDE) estáis utilizando y cómo lo habéis configurado?
 
----
+Usamos Visual Studio Code con extensiones para PHP, HTML y CSS.
 
-### 2. Automatización de tareas
-- **Composer** para dependencias.
-- Scripts de ejecución en `.replit` y `replit.nix`.
+### 2. ¿Cómo automatizáis tareas?
 
----
+Usamos Composer para instalar librerías y archivos de configuración para facilitar la ejecución.
 
-### 3. Control de versiones
-- **Git**.
-- **Plataforma**: GitHub.
+### 3. ¿Utilizáis control de versiones? ¿Qué plataforma?
 
----
+Sí, usamos Git y subimos el código a GitHub para guardar los cambios y trabajar en equipo.
 
-### 4. Refactorización
-- Refactorización manual, revisión de código y modularización en funciones.
+### 4. ¿Qué estrategia seguís para refactorizar vuestro código?
 
----
+Revisamos el código y lo mejoramos cuando hace falta, dividiendo en funciones si es necesario.
 
-### 5. Documentación técnica
-- **Markdown** (`README.md`).
-- **Comentarios** en el código.
+### 5. ¿Cómo documentáis técnicamente el proyecto?
 
----
+Con archivos Markdown (README.md) y comentarios en el código.
 
-### 6. Diagramas
-- No se han creado diagramas de clases ni de comportamiento.
+### 6. ¿Habéis creado diagramas de clases o de comportamiento?
+
+No, porque el proyecto es pequeño y no lo necesita.
 
 ---
 
 ## Bases de Datos
 
-### 1. Sistema gestor de bases de datos
-- No se usa SGBD. Se usan archivos de texto (`historial.txt`).
+### 1. ¿Qué sistema gestor de bases de datos habéis seleccionado? ¿Por qué?
 
----
+No usamos base de datos, solo archivos de texto, porque es suficiente para este proyecto.
 
-### 2. Modelo entidad-relación
-- No aplica por no usar base de datos relacional.
+### 2. ¿Cómo habéis diseñado el modelo entidad-relación?
 
----
+No hace falta porque no hay base de datos.
 
-### 3. Vistas, procedimientos, disparadores
-- No aplica.
+### 3. ¿Usáis vistas, procedimientos almacenados, disparadores o funciones avanzadas?
 
----
+No, porque no hay base de datos.
 
-### 4. Protección y recuperación de datos
-- Archivos: Se pueden respaldar manualmente.
+### 4. ¿Implementáis mecanismos para proteger y recuperar datos?
+
+No, pero los archivos se pueden copiar manualmente si hace falta.
 
 ---
 
 ## Lenguajes de Marcas y Sistemas de Gestión de Información
 
-### 1. Estructura de documentos HTML
-- Uso de etiquetas semánticas y separación de CSS y JS.
+### 1. ¿Cómo habéis estructurado vuestros documentos HTML?
 
----
+Usamos etiquetas claras y separamos el CSS y el JavaScript para que el código sea fácil de entender y mantener.
 
-### 2. Tecnologías frontend
-- **CSS** para estilos.
-- **JavaScript** para lógica SPA y PWA.
+### 2. ¿Qué tecnologías utilizáis para el frontend? ¿Por qué?
 
----
+Usamos HTML, CSS y JavaScript porque son los lenguajes estándar para hacer páginas web.
 
-### 3. Interacción con el DOM
-- Sí, mediante JavaScript:
-  ```js
-  document.getElementById("salida").textContent = data.contenido;
-  ```
+### 3. ¿Utilizáis JavaScript para interactuar con el DOM?
 
----
+Sí, por ejemplo para mostrar los resultados al usuario:
 
-### 4. Validación de HTML y CSS
-- No se menciona validación automática, pero el código es estándar.
+```js
+document.getElementById("salida").textContent = data.contenido;
+```
 
----
+### 4. ¿Habéis validado vuestros documentos HTML y CSS?
 
-### 5. Conversión de datos entre formatos
-- Sí, conversión entre TXT, CSV, JSON, XML, Markdown y PDF.
+No usamos validadores automáticos, pero seguimos las buenas prácticas.
 
----
+### 5. ¿Habéis implementado la conversión de datos entre formatos?
 
-### 6. Integración con sistemas empresariales
-- No, es una aplicación de gestión documental simple, no integrada con sistemas empresariales.
+Sí, el usuario puede convertir entre TXT, CSV, JSON, XML, Markdown y PDF porque así puede usar los datos en diferentes programas.
+
+### 6. ¿Vuestra aplicación interactúa con sistemas de gestión empresarial?
+
+No, es una aplicación sencilla para convertir y gestionar archivos, no está conectada a sistemas empresariales.
 
 ---
 
 ## Proyecto intermodular
 
-### 1. Objetivo del software
-- Convertir archivos de texto/CSV a varios formatos (JSON, XML, Markdown, TXT, PDF).
+### 1. ¿Qué objetivo cumple vuestro software?
 
-### 2. Necesidad/problema que soluciona
-- Facilita la conversión y exportación de datos en distintos formatos para usuarios y pequeñas empresas.
+Permite convertir archivos de texto o CSV a otros formatos como JSON, XML, Markdown, TXT y PDF.
 
-### 3. Stack de tecnologías
-- **Frontend**: HTML, CSS, JavaScript.
-- **Backend**: PHP.
-- **PDF**: mpdf/mpdf.
-- **PWA**: Manifest, Service Worker.
+### 2. ¿Qué necesidad cubre o qué problema soluciona?
 
-### 4. Desarrollo por versiones
-- **Versión 1**: Conversión básica y exportación.
-- **Actualizaciones**: Añadido historial, exportación a PDF, modo PWA, mejoras en la interfaz.
+Ayuda a personas y empresas a transformar datos fácilmente entre diferentes formatos.
+
+### 3. ¿Cuál es el stack de tecnologías que habéis elegido y por qué?
+
+HTML, CSS y JavaScript para la web, PHP para el backend y la librería mpdf para crear PDFs. Son tecnologías fáciles de usar y muy comunes.
+
+### 4. ¿Cómo habéis planteado el desarrollo por versiones?
+
+Primero hicimos una versión básica que convierte archivos. Luego añadimos historial, exportar a PDF y mejoras en la web.
