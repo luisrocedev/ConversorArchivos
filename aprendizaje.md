@@ -211,3 +211,38 @@ HTML, CSS y JavaScript para la web, PHP para el backend y la librería mpdf para
 ### 4. ¿Cómo habéis planteado el desarrollo por versiones?
 
 Primero hicimos una versión básica que convierte archivos. Luego añadimos historial, exportar a PDF y mejoras en la web.
+
+---
+
+# Aprendizaje y notas del proyecto
+
+## Mejoras y requisitos técnicos
+
+- Se ha modernizado la interfaz visual con CSS avanzado (fondos degradados, tarjetas, botones modernos, responsividad, etc.).
+- El proyecto requiere PHP y Composer instalados en el sistema.
+- Se debe instalar la dependencia mpdf para la generación de PDFs.
+
+## Pasos para instalar dependencias
+
+1. Instala Composer si no lo tienes:
+   ```sh
+   brew install php # Si no tienes PHP
+   php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+   php composer-setup.php
+   sudo mv composer.phar /usr/local/bin/composer
+   ```
+2. Instala las dependencias del proyecto (incluye mpdf):
+   ```sh
+   cd /Applications/MAMP/htdocs/GitHub/ConversorArchivos
+   composer install
+   ```
+
+## Notas de desarrollo
+- El Service Worker ahora solo cachea archivos existentes.
+- Se ha añadido manejo global de errores en PHP para respuestas JSON limpias.
+- El historial se almacena tanto localmente (localStorage) como en el servidor (historial.txt).
+- El frontend es responsivo y visualmente atractivo.
+
+---
+
+**Última actualización:** 30 de abril de 2025

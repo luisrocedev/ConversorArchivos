@@ -1,4 +1,27 @@
 <?php
+// Captura errores fatales y los devuelve como JSON
+set_exception_handler(function ($e) {
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo json_encode(['error' => $e->getMessage()]);
+    exit;
+});
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo json_encode(['error' => "$errstr en $errfile:$errline"]);
+    exit;
+});
+register_shutdown_function(function () {
+    $error = error_get_last();
+    if ($error && ($error["type"] === E_ERROR || $error["type"] === E_PARSE)) {
+        http_response_code(500);
+        header('Content-Type: application/json');
+        echo json_encode(['error' => $error["message"]]);
+        exit;
+    }
+});
+
 require __DIR__ . '/vendor/autoload.php'; // Carga mpdf si está instalado
 
 header("Content-Type: application/json");
@@ -15,7 +38,8 @@ $formato = strtolower($input['formato']);
 $fecha = date("Y-m-d_H-i-s");
 $archivoFinal = "convertido_$fecha.$formato";
 
-function convertir($contenido, $tipo, $formato) {
+function convertir($contenido, $tipo, $formato)
+{
     if ($formato === "json") {
         if ($tipo === "csv") {
             $filas = array_map("str_getcsv", explode("\n", trim($contenido)));
@@ -47,7 +71,8 @@ function convertir($contenido, $tipo, $formato) {
     return null;
 }
 
-function generarPDF($contenido, $tipo, $archivoFinal) {
+function generarPDF($contenido, $tipo, $archivoFinal)
+{
     $mpdf = new \Mpdf\Mpdf();
     if ($tipo === "csv") {
         $filas = array_map("str_getcsv", explode("\n", trim($contenido)));

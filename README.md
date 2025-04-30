@@ -1,85 +1,54 @@
-# 🧩 Conversor de Archivos (SPA + API + PWA)
+# Conversor de Archivos
 
-Este proyecto es una aplicación web ligera que permite convertir texto o archivos CSV en distintos formatos: `JSON`, `XML`, `Markdown`, `TXT` y `PDF`. Diseñado como **Single Page Application (SPA)**, incluye una **API en PHP**, es **Progresive Web App (PWA)** y guarda el **historial local y del servidor**.
+Convierte archivos de texto o CSV a JSON, XML, Markdown, TXT y PDF desde una interfaz web moderna.
 
----
+## Características
+- Interfaz visual moderna y responsiva
+- Conversión entre múltiples formatos (TXT, CSV, JSON, XML, Markdown, PDF)
+- Historial local y en servidor
+- Generación de PDF usando mpdf
+- Service Worker para funcionamiento offline básico
 
-## 🚀 Funcionalidades principales
+## Requisitos
+- PHP 7.4 o superior
+- Composer
+- Extensión mbstring habilitada en PHP
 
-- ✅ Conversión de datos en varios formatos
-- ✅ Exportación a PDF con `mpdf`
-- ✅ Visualización del historial local y del servidor
-- ✅ Copia rápida del contenido al portapapeles
-- ✅ Guardado en `localStorage` para uso offline
-- ✅ Instalación como PWA en cualquier dispositivo (iOS, Android, escritorio)
+## Instalación
+1. Instala Composer si no lo tienes:
+   ```sh
+   brew install php # Si no tienes PHP
+   php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+   php composer-setup.php
+   sudo mv composer.phar /usr/local/bin/composer
+   ```
+2. Instala las dependencias del proyecto:
+   ```sh
+   cd /Applications/MAMP/htdocs/GitHub/ConversorArchivos
+   composer install
+   ```
+3. Inicia tu servidor local (por ejemplo, MAMP, XAMPP o el servidor embebido de PHP):
+   ```sh
+   php -S localhost:8000
+   ```
+4. Accede a la aplicación en tu navegador:
+   - http://localhost:8000/index.html
+   - O la ruta correspondiente en tu entorno MAMP/XAMPP
 
----
+## Uso
+1. Escribe o pega tu texto/CSV.
+2. Selecciona el tipo de entrada y el formato de salida.
+3. Haz clic en "Convertir".
+4. Descarga el resultado o cópialo al portapapeles.
 
-## 🧪 Tecnologías usadas
+## Notas técnicas
+- El Service Worker solo cachea archivos existentes.
+- El backend siempre responde en JSON, incluso ante errores.
+- El historial se almacena en localStorage y en el servidor (historial.txt).
 
-- HTML, CSS, JavaScript (SPA)
-- PHP (API backend)
-- `mpdf/mpdf` para generación de PDFs
-- Manifest + Service Worker (PWA)
-
----
-
-## 🔧 Instalación (modo local)
-
-1. Clona el repositorio:
-
-```bash
-git clone https://github.com/usuario/conversorarchivos.git
-cd conversorarchivos
-```
-
-2. Instala `mpdf` si deseas exportar a PDF:
-
-```bash
-composer require mpdf/mpdf
-```
-
-3. Levanta el servidor PHP:
-
-```bash
-php -S localhost:8000
-```
-
-4. Abre tu navegador en:
-
-```
-http://localhost:8000
-```
+## Créditos
+- Librería [mpdf/mpdf](https://mpdf.github.io/) para generación de PDF.
 
 ---
 
-## 📲 Instalación como app (PWA)
-
-1. Abre la app en tu navegador (Safari, Chrome, etc).
-2. Pulsa el botón de compartir / menú.
-3. Selecciona “Añadir a pantalla de inicio”.
-4. ¡Listo! Puedes usarla como app sin conexión.
-
----
-
-## 🔮 Futuras implicaciones
-
-Este proyecto puede ser utilizado como módulo o microservicio para:
-
-- Exportar facturas o informes en un software PMS.
-- Generar documentos automatizados en otras plataformas.
-- Servir como plantilla base para otras apps SPA + API.
-- Reutilizar en proyectos con múltiples formatos de salida (texto → doc → json → pdf).
-
----
-
-## 🧠 Autor
-
-**Luis Jahir Rodríguez Cedeño**  
-Proyecto desarrollado como práctica de desarrollo web, backend modular, y diseño progresivo (PWA).
-
----
-
-## 📘 Licencia
-
-MIT — Puedes usar, adaptar y compartir este proyecto libremente.
+**Actualizado:** 30 de abril de 2025
