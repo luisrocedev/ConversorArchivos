@@ -238,6 +238,7 @@ Primero hicimos una versión básica que convierte archivos. Luego añadimos his
    ```
 
 ## Notas de desarrollo
+
 - El Service Worker ahora solo cachea archivos existentes.
 - Se ha añadido manejo global de errores en PHP para respuestas JSON limpias.
 - El historial se almacena tanto localmente (localStorage) como en el servidor (historial.txt).

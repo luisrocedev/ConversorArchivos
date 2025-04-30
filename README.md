@@ -3,6 +3,7 @@
 Convierte archivos de texto o CSV a JSON, XML, Markdown, TXT y PDF desde una interfaz web moderna.
 
 ## Características
+
 - Interfaz visual moderna y responsiva
 - Conversión entre múltiples formatos (TXT, CSV, JSON, XML, Markdown, PDF)
 - Historial local y en servidor
@@ -10,11 +11,13 @@ Convierte archivos de texto o CSV a JSON, XML, Markdown, TXT y PDF desde una int
 - Service Worker para funcionamiento offline básico
 
 ## Requisitos
+
 - PHP 7.4 o superior
 - Composer
 - Extensión mbstring habilitada en PHP
 
 ## Instalación
+
 1. Instala Composer si no lo tienes:
    ```sh
    brew install php # Si no tienes PHP
@@ -36,17 +39,20 @@ Convierte archivos de texto o CSV a JSON, XML, Markdown, TXT y PDF desde una int
    - O la ruta correspondiente en tu entorno MAMP/XAMPP
 
 ## Uso
+
 1. Escribe o pega tu texto/CSV.
 2. Selecciona el tipo de entrada y el formato de salida.
 3. Haz clic en "Convertir".
 4. Descarga el resultado o cópialo al portapapeles.
 
 ## Notas técnicas
+
 - El Service Worker solo cachea archivos existentes.
 - El backend siempre responde en JSON, incluso ante errores.
 - El historial se almacena en localStorage y en el servidor (historial.txt).
 
 ## Créditos
+
 - Librería [mpdf/mpdf](https://mpdf.github.io/) para generación de PDF.
 
 ---
